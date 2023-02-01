@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.util.Assert;
 
 @Getter
+@ToString
 public class Member {
 
   private final static Long NAME_MAX_LENGTH = 10L;
@@ -31,5 +33,11 @@ public class Member {
 
   private void validateNickname(String nickname) {
     Assert.isTrue(nickname.length() <= NAME_MAX_LENGTH, "최대 길이를 초과했습니다.");
+  }
+
+  public void changeName(String to) {
+    Objects.requireNonNull(to);
+    validateNickname(to);
+    this.nickname = to;
   }
 }
