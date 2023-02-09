@@ -27,12 +27,12 @@ public class MemberController {
     return memberWriteService.create(command);
   }
 
-  @GetMapping("{id}")
+  @GetMapping("/{id}")
   public MemberDto get(@PathVariable Long id) {
     return memberReadService.getMember(id);
   }
 
-  @PostMapping("{id}/nickname")
+  @PostMapping("/{id}/nickname")
   public MemberDto changeNickname(@PathVariable Long id, @RequestBody String nickname) {
     memberWriteService.changeNickname(id, nickname);
     return memberReadService.getMember(id);
