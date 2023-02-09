@@ -9,6 +9,8 @@ create table Member
         primary key (id)
 );
 
+use sns;
+
 create table MemberNicknameHistory
 (
     id int auto_increment,

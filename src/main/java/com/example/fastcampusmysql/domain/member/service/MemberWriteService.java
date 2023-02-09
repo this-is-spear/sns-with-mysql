@@ -3,6 +3,8 @@ package com.example.fastcampusmysql.domain.member.service;
 import com.example.fastcampusmysql.domain.member.dto.MemberDto;
 import com.example.fastcampusmysql.domain.member.dto.RegisterMemberCommand;
 import com.example.fastcampusmysql.domain.member.entity.Member;
+import com.example.fastcampusmysql.domain.member.entity.MemberNicknameHistory;
+import com.example.fastcampusmysql.domain.member.repository.MemberNicknameHistoryRepository;
 import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,22 +14,30 @@ import org.springframework.stereotype.Service;
 public class MemberWriteService {
 
   private final MemberRepository memberRepository;
+  private final MemberNicknameHistoryRepository memberNicknameHistoryRepository;
 
   public MemberDto create(RegisterMemberCommand command) {
-    /*
-      TODO - 회원정보(이메일, 닉네임, 생년월일)를 등록한다.
-      TODO - 닉네임은 10자를 넘길 수 없다.
-      parameter - memberRegisterCommand
-      val member = Member.of(memberRegisterCommand)
-      memberRepository.save(member)
-     */
     Member member = Member.builder()
         .nickname(command.nickname())
         .email(command.email())
         .birthday(command.birthday())
         .build();
+    Member savedMember = memberRepository.save(member);
+    saveNicknameHistory(savedMember);
+    return toDto(savedMember);
+  }
 
-    return toDto(memberRepository.save(member));
+  public void changeNickname(Long memberId, String nickname) {
+    var member = memberRepository.findById(memberId).orElseThrow();
+    member.changeName(nickname);
+    memberRepository.save(member);
+    saveNicknameHistory(member);
+  }
+
+  private void saveNicknameHistory(Member member) {
+    var history = MemberNicknameHistory.builder()
+        .memberId(member.getId()).nickname(member.getNickname()).build();
+    memberNicknameHistoryRepository.save(history);
   }
 
   private MemberDto toDto(Member member) {

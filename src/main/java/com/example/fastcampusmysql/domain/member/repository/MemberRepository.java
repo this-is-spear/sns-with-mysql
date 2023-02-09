@@ -22,12 +22,6 @@ public class MemberRepository {
   private final static String TABLE = "Member";
 
   public Optional<Member> findById(Long id) {
-    /*
-      select *
-      from Member
-      where id = :id
-     */
-
     var sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
     var param = new MapSqlParameterSource()
         .addValue("id", id);
@@ -59,7 +53,7 @@ public class MemberRepository {
     // namedParameterJdbcTemplate은 JDBC 템플릿을 composite 했기 때문에 내부에 선언된 JDBC 템플릿을 꺼내야 한다.
     SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(
         namedParameterJdbcTemplate.getJdbcTemplate())
-        .withTableName("Member")
+        .withTableName(TABLE)
         .usingGeneratedKeyColumns("id");
 
     // bean으로 sql parameter source를 만들어준다.
@@ -76,6 +70,10 @@ public class MemberRepository {
 
   private Member update(Member member) {
     // TODO : implemented
+    var sql = String.format(
+        "UPDATE %s SET email = :email, nickname =:nickname, birthday = :birthday WHERE id = :id", TABLE);
+    SqlParameterSource params = new BeanPropertySqlParameterSource(member);
+    namedParameterJdbcTemplate.update(sql, params);
     return member;
   }
 }
