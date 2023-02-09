@@ -17,12 +17,12 @@ public class MemberWriteService {
   private final MemberNicknameHistoryRepository memberNicknameHistoryRepository;
 
   public MemberDto create(RegisterMemberCommand command) {
-    Member member = Member.builder()
+    var member = Member.builder()
         .nickname(command.nickname())
         .email(command.email())
         .birthday(command.birthday())
         .build();
-    Member savedMember = memberRepository.save(member);
+    var savedMember = memberRepository.save(member);
     saveNicknameHistory(savedMember);
     return toDto(savedMember);
   }

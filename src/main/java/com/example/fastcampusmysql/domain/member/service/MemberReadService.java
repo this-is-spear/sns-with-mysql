@@ -19,7 +19,7 @@ public class MemberReadService {
   private final MemberNicknameHistoryRepository memberNicknameHistoryRepository;
 
   public MemberDto getMember(Long id) {
-    Member member = memberRepository.findById(id).orElseThrow();
+    var member = memberRepository.findById(id).orElseThrow();
     return toDto(member);
   }
 
