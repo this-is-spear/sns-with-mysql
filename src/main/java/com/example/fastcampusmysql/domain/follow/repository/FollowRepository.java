@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -31,6 +30,7 @@ public class FollowRepository {
     var params = new MapSqlParameterSource().addValue("fromMemberId", fromMemberId);
     return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
   }
+
   public Follow save(Follow follow) {
     if (follow.getId() == null) {
       return insert(follow);

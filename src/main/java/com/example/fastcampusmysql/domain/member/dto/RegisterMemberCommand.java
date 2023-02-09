@@ -7,4 +7,5 @@ public record RegisterMemberCommand(
     String nickname,
     LocalDate birthday
 ) {
+
 }

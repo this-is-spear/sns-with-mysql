@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class HelloWorldController {
-    final private NamedParameterJdbcTemplate jdbcTemplate;
+
+  final private NamedParameterJdbcTemplate jdbcTemplate;
 
 
-    @GetMapping("/hello")
-    public Integer helloWorld() {
-        return jdbcTemplate.queryForObject("SELECT 1", new MapSqlParameterSource(), Integer.class);
-    }
+  @GetMapping("/hello")
+  public Integer helloWorld() {
+    return jdbcTemplate.queryForObject("SELECT 1", new MapSqlParameterSource(), Integer.class);
+  }
 }
