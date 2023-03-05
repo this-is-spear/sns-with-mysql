@@ -14,10 +14,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import com.example.fastcampusmysql.PageHelper;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.entity.Post;
+import com.example.fastcampusmysql.util.PageHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -112,6 +112,39 @@ public class PostRepository {
 		var posts = namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
 		Long count = getCount(memberId);
 		return new PageImpl<>(posts, pageable, count);
+	}
+
+	public List<Post> findAllByMemberId(Long memberId, int size) {
+		var params = new MapSqlParameterSource()
+			.addValue("memberId", memberId)
+			.addValue("size", size);
+
+		var sql = String.format("""
+			SELECT *
+			FROM %s
+			WHERE memberId = :memberId
+			ORDER BY id desc
+			LIMIT :size
+			""", TABLE);
+
+		return namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
+	}
+
+	public List<Post> findAllByMemberId(Long id, Long memberId, int size) {
+		var params = new MapSqlParameterSource()
+			.addValue("memberId", memberId)
+			.addValue("size", size)
+			.addValue("id", id);
+
+		var sql = String.format("""
+			SELECT *
+			FROM %s
+			WHERE memberId = :memberId AND id < :id
+			ORDER BY id desc
+			LIMIT :size
+			""", TABLE);
+
+		return namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
 	}
 
 	private Long getCount(Long memberId) {
