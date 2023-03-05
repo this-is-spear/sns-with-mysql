@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import com.example.fastcampusmysql.PageHelper;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.entity.Post;
@@ -103,9 +104,10 @@ public class PostRepository {
 			SELECT *
 			FROM %s
 			WHERE memberId = :memberId
+			ORDER BY %s
 			LIMIT :size
 			OFFSET :offset;
-			""", TABLE);
+			""", TABLE, PageHelper.orderBy(pageable.getSort()));
 
 		var posts = namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
 		Long count = getCount(memberId);
